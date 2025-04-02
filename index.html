@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Messenger</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Авторизация -->
+    <div class="auth-container" id="auth-container">
+        <div class="auth-form" id="login-form">
+            <h2>Вход</h2>
+            <div class="input-group">
+                <input type="text" id="login-username" placeholder="Логин" required>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="login-password" placeholder="Пароль" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <button id="login-btn">Войти</button>
+            <p class="auth-switch">Нет аккаунта? <span id="show-register">Зарегистрироваться</span></p>
+        </div>
+
+        <div class="auth-form hidden" id="register-form">
+            <h2>Регистрация</h2>
+            <div class="input-group">
+                <input type="text" id="register-username" placeholder="Логин" required>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="register-password" placeholder="Пароль" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="input-group">
+                <input type="password" id="register-confirm" placeholder="Подтвердите пароль" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <button id="register-btn">Зарегистрироваться</button>
+            <p class="auth-switch">Уже есть аккаунт? <span id="show-login">Войти</span></p>
+        </div>
+    </div>
+
+    <!-- Основной интерфейс мессенджера -->
+    <div class="messenger-container hidden" id="messenger-container">
+        <!-- Боковая панель -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img">
+                    <span id="current-username">Пользователь</span>
+                </div>
+                <button id="logout-btn" class="icon-btn" title="Выйти">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+
+            <div class="search-container">
+                <input type="text" placeholder="Поиск..." id="search-input">
+                <i class="fas fa-search"></i>
+            </div>
+
+            <div class="sidebar-tabs">
+                <button class="tab-btn active" data-tab="chats">Чаты</button>
+                <button class="tab-btn" data-tab="groups">Группы</button>
+                <button class="tab-btn" data-tab="contacts">Контакты</button>
+            </div>
+
+            <div class="chat-list" id="chat-list">
+                <!-- Чаты будут добавляться сюда через JS -->
+            </div>
+
+            <button class="new-chat-btn" id="new-chat-btn">
+                <i class="fas fa-plus"></i> Новый чат
+            </button>
+        </div>
+
+        <!-- Основное содержимое -->
+        <div class="main-content">
+            <div class="chat-placeholder" id="chat-placeholder">
+                <div class="placeholder-content">
+                    <i class="fas fa-comments"></i>
+                    <h3>Выберите чат или создайте новый</h3>
+                    <p>Начните общение с друзьями и коллегами</p>
+                    <button class="create-chat-btn" id="create-chat-btn">Создать чат</button>
+                </div>
+            </div>
+
+            <div class="active-chat hidden" id="active-chat">
+                <div class="chat-header">
+                    <div class="chat-info">
+                        <img src="https://via.placeholder.com/40" alt="Chat" class="chat-img">
+                        <div>
+                            <h3 id="chat-title">Название чата</h3>
+                            <p id="chat-status">онлайн</p>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="icon-btn" title="Добавить участника">
+                            <i class="fas fa-user-plus"></i>
+                        </button>
+                        <button class="icon-btn" title="Настройки">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="messages-container" id="messages-container">
+                    <!-- Сообщения будут добавляться сюда -->
+                </div>
+
+                <div class="message-input-container">
+                    <div class="input-actions">
+                        <button class="icon-btn" title="Прикрепить файл">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="icon-btn" title="Эмодзи">
+                            <i class="far fa-smile"></i>
+                        </button>
+                    </div>
+                    <input type="text" placeholder="Напишите сообщение..." id="message-input">
+                    <button class="send-btn" id="send-btn" title="Отправить">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно нового чата -->
+        <div class="modal hidden" id="new-chat-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Создать новый чат</h3>
+                    <button class="close-modal" id="close-new-chat-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-tabs">
+                        <button class="modal-tab-btn active" data-tab="private">Приватный чат</button>
+                        <button class="modal-tab-btn" data-tab="group">Групповой чат</button>
+                    </div>
+
+                    <div class="modal-tab-content active" id="private-tab">
+                        <div class="input-group">
+                            <input type="text" id="private-chat-name" placeholder="Имя пользователя">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <button class="create-btn" id="create-private-chat">Создать</button>
+                    </div>
+
+                    <div class="modal-tab-content" id="group-tab">
+                        <div class="input-group">
+                            <input type="text" id="group-chat-name" placeholder="Название группы">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="group-members" placeholder="Добавить участников (через запятую)">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <button class="create-btn" id="create-group-chat">Создать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
